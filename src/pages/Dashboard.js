@@ -22,11 +22,12 @@ export const Dashboard = () => {
     })
 
     return (
-        <>
-            <div className='dashboard-container'>
-                <h1 className='text-3xl font-bold'> Dashboard Page </h1> 
-                <p> Welcome, { userEmail ? `${userEmail}` : 'Guest'} </p>
+            <div className='min-h-screen bg-gray-100 flex items-center justify-center'>
+                <div className='bg-white shadow-lg rounded-lg p-6 md:p-12'>
+                    <h1 className='text-3xl font-bold mb-4'> Dashboard Page </h1> 
+                    <p className='text-lg'> Welcome, { userEmail ? `${userEmail}` : 'Guest'} </p>
+                </div>
             </div>
-        </>
     );
 }
+
