@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getDatabase, ref, push, set } from 'firebase/database';
 import { database } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import Modal from '../components/Modal';
 
 const AddKlasyk = () => {
+
+    const navigate = useNavigate();
+
+    const handleDashboardClick = () => {
+        navigate('/dashboard');
+    }
 
     const [ formData, setFormData ] = useState({
         artysta: '',
@@ -11,6 +19,12 @@ const AddKlasyk = () => {
         urlek: '',
         genre: '',
         gwiazdeczki: ''
+    });
+
+    const [modalState, setModalState] = useState({
+       show: false,
+       success: true, 
+       message: '' 
     });
 
     const handleChange = (e) => {
@@ -29,6 +43,11 @@ const AddKlasyk = () => {
             const newKlasykRef = push(klasykRef);
             await set(newKlasykRef, formData);
             console.log("Document written with ID: ", newKlasykRef.key);
+            setModalState({
+                show: true, 
+                success: true,
+                message: 'Klasyk zostal dodany EZ'
+            });
             // Optionally, reset the form 
             setFormData({
                 artysta: '',
@@ -39,8 +58,20 @@ const AddKlasyk = () => {
             });
         } catch (e) {
             console.error("Error adding document: ", e);
+            setModalState({
+                show: true,
+                success: false,
+                message: 'Cos poszlo nie tak #sadge'
+            });
         }
     };
+
+    const closeModal = () => {
+        setModalState((prevState) => ({
+            ...prevState,
+            show: false
+        }));
+    }
  
     return (
         <div className="flex items-center justify-center h-screen bg-blue-100">
@@ -124,11 +155,26 @@ const AddKlasyk = () => {
                     > 
                         Dodaj Klasyka 
                     </button>
+
+                    <button 
+                    className="bg-blue-500 text-white m-2 px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+                    onClick={handleDashboardClick}
+                >
+                    Daszbord
+                </button>
+                    
                 </form>
                 <p className="text-center text-gray-500 text-xs">
                     &copy;2024 KlasykApp. All rights reserved.
                 </p>
             </div>
+
+            <Modal
+                show={modalState.show}
+                success={modalState.success}
+                message={modalState.message}
+                onClose={closeModal}
+             />
         </div>
     );
 }
